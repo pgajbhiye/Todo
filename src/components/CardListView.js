@@ -1,6 +1,6 @@
-import React, {useState, useRef,useCallback} from 'react';
+import React from 'react';
 import {Dimensions, FlatList, TouchableOpacity} from 'react-native';
-import {Card, Text, View, Icon} from 'native-base';
+import {Card, Icon, Text, View} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {
@@ -8,8 +8,11 @@ import {
     COLOR_CODE_MAP,
     CUSTOM_CATEGORY_ID,
     CUSTOM_COLOR_CODE,
+    INITIAL_CATEGORY_ID,
 } from '../store/constants';
-import {NO_TASK, TASK_1, TASKS_1} from '../utils/messages';
+import {NO_TASK, TASK_1, TASKS_1, TASKS_INFO} from '../utils/messages';
+import {ROUTE_ADD_CATEGORY, ROUTE_TASK_LIST} from '../route.keys';
+import {cardViewStyle, customCardViewStyle, HomeCardStyle, labelStyle} from '../styles/CardListView.styles';
 
 var _ = require('lodash');
 
@@ -18,7 +21,7 @@ const {width: screenW, height: screenH} = Dimensions.get('window');
 export const CardListView = ({onChangeColor}) => {
     const navigation = useNavigation();
     const categories = useSelector(state => state.categories || {});
-    let categoryInFocus = "category_personal";
+    let categoryInFocus = INITIAL_CATEGORY_ID;
 
 
     const getTaskTitle = (category, tasks) => {
@@ -31,7 +34,7 @@ export const CardListView = ({onChangeColor}) => {
             if (len <= 0) {
                 return NO_TASK;
             } else {
-                return `You have ${label} today`;
+                return TASKS_INFO(label);
             }
         }
     };
@@ -50,37 +53,15 @@ export const CardListView = ({onChangeColor}) => {
         }
     });
 
-
-/*
-    const itemChange = ({viewableItems, changed}) => {
-        console.log("Visible items are", viewableItems);
-        console.log("Changed in this iteration", changed);
-        if (viewableItems[0] && viewableItems[0].item) {
-            const itemInFocus = viewableItems[0].item;
-            //onViewChange(itemInFocus);
-            if (itemInFocus === CUSTOM_CATEGORY_ID) {
-                onChangeColor(COLOR_CODE_MAP[CUSTOM_COLOR_CODE]);
-            } else {
-                if (categories[itemInFocus]) {
-                    //error was coming after clicking on "ADD_CATegory"
-                    onChangeColor(COLOR_CODE_MAP[categories[itemInFocus].colorCode]);
-                }
-            }
-            currentCategory = itemInFocus;
-        }
-
-    };
-*/
-
     const viewabilityConfig = {
         viewAreaCoveragePercentThreshold: 95,
     };
 
     const onOpenCard = (categoryKey) => {
         if (categoryKey === CUSTOM_CATEGORY_ID) {
-            navigation.push('AddCategory', {currentCategory:categoryKey});
+            navigation.push(ROUTE_ADD_CATEGORY, {currentCategory:categoryKey});
         } else {
-            navigation.push('TaskList', {currentCategory:categoryKey});
+            navigation.push(ROUTE_TASK_LIST, {currentCategory:categoryKey});
         }
     };
 
@@ -111,27 +92,12 @@ export const CardListView = ({onChangeColor}) => {
         const opacity = categoryInFocus === categoryKey?  1 : 0;
         return (
             <View>
-          <Text style={{color: 'white', opacity , fontSize: 16, paddingBottom: 6, paddingLeft:6}}>{taskTitle}</Text>
+          <Text style={[labelStyle, {opacity}]}>{taskTitle}</Text>
 
             <TouchableOpacity activeOpacity={0.8}
                               onPress={onOpenCard.bind(this, categoryKey)}>
-                <Card style={{
-                    borderRadius: 8,
-                    elevation: 2,
-                    backgroundColor: 'white',
-                    marginRight: 6,
-                    marginLeft:6,
-                    width: screenW - 180,
-                    height: screenH / 2,
-                    flexDirection: 'column',
-                    padding: 20,
-                }}>
-                    <View style={{
-                        flex: 1,
-                        justifyContent: isCustom ? 'center' : 'flex-end',
-                        alignItems: isCustom ? 'center' : null,
-                        marginBottom: isCustom ? 20 : 40,
-                    }}>
+                <Card style={[HomeCardStyle, {height: screenH/2}]}>
+                    <View style={isCustom? customCardViewStyle : cardViewStyle}>
                         {cardContent}
                     </View>
                 </Card>
@@ -167,61 +133,3 @@ export const CardListView = ({onChangeColor}) => {
         </>
     );
 };
-
-/*    const onViewRef = React.useRef((value) => {
-        if (value && value.viewableItems[0] && value.viewableItems[0].item) {
-            const itemInFocus = value.viewableItems[0].item;
-            onViewChange(itemInFocus);
-        }
-    });*/
-
-/*const onViewRef = React.useRef((value) => {
-    if (value && value.viewableItems[0] && value.viewableItems[0].item) {
-        const itemInFocus = value.viewableItems[0].item;
-        onViewChange(itemInFocus);
-    }
-});*/
-
-/*
-*  const todaysTaskLabel = () => {
-        if (currentCategory === CUSTOM_CATEGORY_ID) {
-            return ' ';
-        } else {
-            const todaysTasks = todaysTaskByCurCategory();
-
-            const len = (todaysTasks || []).length;
-            const label = `${len} ${len === 1 ? 'task' : 'tasks'}`;
-
-            if (len <= 0) {
-                return 'You have no task today';
-            } else {
-                return `You have ${label} today`;
-            }
-        }
-
-          const todaysTaskByCurCategory = () => {
-        const tasks = categories[currentCategory].tasks;
-        if (!tasks) {
-            return [];
-        }
-        return _.filter(tasks, (task) => {
-            return moment(task.createdDate, 'YYYYMMDD').isSame(moment().format(dateFormat));
-        });
-    };
-
-        const onViewChange = (itemInFocus)=>{
-        console.log("going back one ",categories , itemInFocus);
-        if (itemInFocus) {
-            if (itemInFocus === CUSTOM_CATEGORY_ID) {
-                onChangeColor(COLOR_CODE_MAP[CUSTOM_COLOR_CODE]);
-            } else {
-                console.log("going back ",categories , itemInFocus);
-                if (categories[itemInFocus]) {
-                    //error was coming after clicking on "ADD_CATegory"
-                    onChangeColor(COLOR_CODE_MAP[categories[itemInFocus].colorCode]);
-                }
-            }
-            currentCategory = itemInFocus;
-        }
-    };
-    };*/

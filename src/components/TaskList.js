@@ -5,7 +5,6 @@ import {
     Button,
     CheckBox,
     Container,
-    Content,
     Fab,
     Header,
     Icon,
@@ -20,6 +19,7 @@ import {useSelector} from 'react-redux';
 import {dateFormat} from '../store/constants';
 import {deleteTask, updateTask} from '../store/actions';
 import {store} from '../store/store';
+import {ROUTE_ADD_TASK} from '../route.keys';
 
 
 const OPTIONS = ['Edit', 'Delete', 'Cancel'];
@@ -71,7 +71,7 @@ export const TaskList = ({route, navigation}) => {
                     if (OPTIONS[buttonIndex] === 'Delete') {
                         store.dispatch(deleteTask(categoryParam, item.id));
                     } else if (OPTIONS[buttonIndex] === 'Edit') {
-                        navigation.push('AddTask', {currentCategory: categoryParam, editItem:item});
+                        navigation.push(ROUTE_ADD_TASK, {currentCategory: categoryParam, editItem:item});
                         // store.dispatch(updateTask(categoryParam, item.id, item.name, item.createdDate, item.completed));
                     }
                 },

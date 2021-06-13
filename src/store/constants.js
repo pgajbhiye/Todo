@@ -65,6 +65,8 @@ export const CATEGORY_DATA = [
     },
 ];
 
+export const INITIAL_CATEGORY_ID = "category_personal";
+
 export const intialState = {
     categories: {
         'category_personal': {

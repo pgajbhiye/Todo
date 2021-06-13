@@ -1,6 +1,5 @@
-import React, {useState, useCallback} from 'react';
-import {Button, Container, Icon, H1, Text, View} from 'native-base';
-import LinearGradient from 'react-native-linear-gradient';
+import React from 'react';
+import {Container, H1, Text, View} from 'native-base';
 import {CardListView} from './CardListView';
 import {HomeGradientBg} from './HomeGradientBg';
 

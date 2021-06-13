@@ -1,4 +1,4 @@
-import LinearGradient from "react-native-linear-gradient";
+import LinearGradient from 'react-native-linear-gradient';
 import React from 'react';
 
 export class HomeGradientBg extends React.Component{

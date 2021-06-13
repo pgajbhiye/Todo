@@ -1,7 +1,7 @@
 import React from 'react';
-import {Icon, Button} from 'native-base';
+import {Button, Icon} from 'native-base';
 import {View} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 export const HomeHeader = () => {
     const navigation = useNavigation();

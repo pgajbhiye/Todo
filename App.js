@@ -3,7 +3,6 @@ import React from 'react';
 
 import {Root} from 'native-base';
 import {Home} from './src/components/Home';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import NavigationContainer from '@react-navigation/native/src/NavigationContainer';
 import {createStackNavigator} from '@react-navigation/stack';
 import {TaskList} from './src/components/TaskList';
@@ -12,25 +11,9 @@ import {persistor, store} from './src/store/store';
 import {Provider} from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import {AddCategory} from './src/components/AddCategory';
+import {ROUTE_ADD_CATEGORY, ROUTE_ADD_TASK, ROUTE_HOME, ROUTE_TASK_LIST} from './src/route.keys';
 
-const Drawer = createDrawerNavigator();
-
-
-/*const App: () => React$Node = () => {
-    return (
-        <NavigationContainer>
-            <Drawer.Navigator initialRouteName="Home">
-                <Drawer.Screen name="Home" component={Home} />
-                <Drawer.Screen name="Notifications" component={Notifications} />
-            </Drawer.Navigator>
-        </NavigationContainer>
-    );
-};*/
 const Stack = createStackNavigator();
-
-const initializeDefaultStore = () => {
-
-};
 
 const App: () => React$Node = () => {
     return (
@@ -39,11 +22,11 @@ const App: () => React$Node = () => {
                 <PersistGate loading={null} persistor={persistor}>
                 <NavigationContainer>
                     <Stack.Navigator cardOverlayEnabled={true}
-                                     headerMode={null} initialRouteName="Home">
-                        <Stack.Screen name="Home" component={Home}/>
-                        <Stack.Screen name="TaskList" component={TaskList}/>
-                        <Stack.Screen name="AddTask" component={AddTaskComponent}/>
-                        <Stack.Screen name="AddCategory" component={AddCategory}/>
+                                     headerMode={null} initialRouteName={ROUTE_HOME}>
+                        <Stack.Screen name={ROUTE_HOME} component={Home}/>
+                        <Stack.Screen name={ROUTE_TASK_LIST} component={TaskList}/>
+                        <Stack.Screen name={ROUTE_ADD_TASK} component={AddTaskComponent}/>
+                        <Stack.Screen name={ROUTE_ADD_CATEGORY} component={AddCategory}/>
                     </Stack.Navigator>
                 </NavigationContainer>
                 </PersistGate>
